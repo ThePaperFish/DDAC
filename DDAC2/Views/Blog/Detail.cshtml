@@ -1,0 +1,83 @@
+﻿@model DDAC2.Models.Comment
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>Blog</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dd>
+            @ViewBag.post.Title
+        </dd>
+        <dd>
+            @ViewBag.post.Content
+        </dd>
+        <dd>
+            @ViewBag.post.PublishedDate
+        </dd>
+        <dd>
+            @ViewBag.post.EditedDate
+        </dd>
+        <dd>
+            @ViewBag.post.Tag
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="AuthorId" class="control-label"></label>
+            <input asp-for="AuthorId" class="form-control" />
+            <span asp-validation-for="AuthorId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Content" class="control-label"></label>
+            <input asp-for="Content" class="form-control" />
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+        <div class="form-group" hidden>
+            <label asp-for="PostId" class="control-label"></label>
+            <input asp-for="PostId" class="form-control" value="@ViewBag.Post.ID" />
+            <span asp-validation-for="PostId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Comment" class="btn btn-default" />
+        </div>
+    </form>
+</div>
+
+<div>
+    @if (ViewBag.Comments.Count > 0)
+    {
+        @foreach (Comment item in ViewBag.Comments)
+        {
+            <div>
+                <h4>
+                    @Html.DisplayFor(modelItem => item.AuthorId)
+                </h4>
+                <span> @Html.DisplayFor(modelItem => item.EditedDate) </span> |
+                <span> @Html.DisplayFor(modelItem => item.PublishedDate) </span> |
+                <span> @Html.DisplayFor(modelItem => item.PostId) </span>
+            </div>
+            <p>
+                @Html.DisplayFor(modelItem => item.Content)
+            </p>
+        }
+    }
+    else
+    {
+        <p>
+            There is no comment yet.
+        </p>
+    }
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

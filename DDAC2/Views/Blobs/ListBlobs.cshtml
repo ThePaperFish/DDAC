@@ -1,0 +1,16 @@
+﻿@model dynamic
+@{
+    ViewBag.Title = "List blobs";
+}
+
+<h2>List blobs</h2>
+
+<ul>
+    @foreach (var item in Model.blobs)
+    {
+    <li>
+        @item.Name<br>
+        <img src="@item.Path"/>
+    </li>
+    }
+</ul>
