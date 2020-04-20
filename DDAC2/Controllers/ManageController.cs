@@ -11,9 +11,11 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using DDAC2.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DDAC2.Controllers
 {
+ [Authorize(Roles = "Admin")]
     public class ManageController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -31,7 +33,7 @@ namespace DDAC2.Controllers
                                            select m.Tag;
             //Flower = await _context.Flower.ToListAsync();
             var posts = from m in _context.Post
-                          select m;
+                        select m;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -83,17 +85,17 @@ namespace DDAC2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PostViewModel vm)
+        public async Task<IActionResult> Create(int id, int ID, string Title, IFormFile CoverPhoto, string Content, string Tag)
         {
             var post = new Post
             {
-                ID = vm.ID,
-                Title = vm.Title,
-                CoverPhoto = vm.Title,
-                Content = vm.Content,
-                PublishedDate = vm.PublishedDate,
-                EditedDate = vm.EditedDate,
-                Tag = vm.Tag
+                ID = ID,
+                Title = Title,
+                CoverPhoto = Title,
+                Content = Content,
+                PublishedDate = DateTime.Now,
+                EditedDate = DateTime.Now,
+                Tag = Tag
             };
 
             if (!ModelState.IsValid)
@@ -110,10 +112,10 @@ namespace DDAC2.Controllers
                 ModelState.AddModelError(string.Empty, "This blog title is already exists.");
                 return View(post);
             }
-            
+
             BlobsController blobsController = new BlobsController();
 
-            if (! blobsController.UploadBlobFunction(post.Title, vm.CoverPhoto.OpenReadStream()))
+            if (!blobsController.UploadBlobFunction(post.Title, CoverPhoto.OpenReadStream()))
             {
                 ModelState.AddModelError(string.Empty, "The image file failed to upload.");
                 return View(post);
@@ -146,15 +148,17 @@ namespace DDAC2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, PostViewModel vm)
+        public async Task<IActionResult> Edit(int id, int ID, string Title, IFormFile CoverPhoto, string Content, DateTime PublishedDate, string Tag)
         {
             var post = new Post
             {
-                ID = vm.ID,
-                Title = vm.Title,
-                CoverPhoto = vm.Title,
-                Content = vm.Content,
-                Tag = vm.Tag
+                ID = ID,
+                Title = Title,
+                CoverPhoto = Title,
+                Content = Content,
+                PublishedDate = PublishedDate,
+                EditedDate = DateTime.Now,
+                Tag = Tag
             };
 
             if (id != post.ID)
@@ -162,13 +166,16 @@ namespace DDAC2.Controllers
                 return NotFound();
             }
 
-            BlobsController blobsController = new BlobsController();
-            if (!blobsController.UploadBlobFunction(post.Title, vm.CoverPhoto.OpenReadStream()))
+            if (CoverPhoto != null)
             {
-                ModelState.AddModelError(string.Empty, "The image file failed to upload.");
-                return View(post);
+                BlobsController blobsController = new BlobsController();
+                if (!blobsController.UploadBlobFunction(post.Title, CoverPhoto.OpenReadStream()))
+                {
+                    ModelState.AddModelError(string.Empty, "The image file failed to upload.");
+                    return View(post);
+                }
+                post.CoverPhoto = post.Title;
             }
-            post.CoverPhoto = post.Title;
 
             if (ModelState.IsValid)
             {
@@ -227,7 +234,7 @@ namespace DDAC2.Controllers
 
             _context.Post.Remove(post);
             await _context.SaveChangesAsync();
-            
+
             return RedirectToAction(nameof(Index));
         }
 

@@ -15,5 +15,6 @@ namespace DDAC2.Data
 
         public DbSet<DDAC2.Models.Post> Post { get; set; }
         public DbSet<DDAC2.Models.Comment> Comment { get; set; }
+        public DbSet<DDAC2.Models.Project> Project { get; set; }
     }
 }

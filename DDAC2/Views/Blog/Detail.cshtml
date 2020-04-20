@@ -4,70 +4,68 @@
     ViewBag.Title = "Details";
 }
 
-<h2>@ViewBag.Title</h2>
-
-<div>
-    <h4>Blog</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dd>
-            @ViewBag.post.Title
-        </dd>
-        <dd>
-            @ViewBag.post.Content
-        </dd>
-        <dd>
-            @ViewBag.post.PublishedDate
-        </dd>
-        <dd>
-            @ViewBag.post.EditedDate
-        </dd>
-        <dd>
-            @ViewBag.post.Tag
-        </dd>
-    </dl>
+<div class="container blog-container" style="background-image: url('@ViewBag.ImgUri')">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="post-heading">
+                <h1>@ViewBag.post.Title</h1>
+                <h2 class="subheading">@ViewBag.post.Tag</h2>
+                <span class="meta">
+                    Posted on @ViewBag.post.PublishedDate
+                </span>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-    <form method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="AuthorId" class="control-label"></label>
-            <input asp-for="AuthorId" class="form-control" />
-            <span asp-validation-for="AuthorId" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Content" class="control-label"></label>
-            <input asp-for="Content" class="form-control" />
-            <span asp-validation-for="Content" class="text-danger"></span>
-        </div>
-        <div class="form-group" hidden>
-            <label asp-for="PostId" class="control-label"></label>
-            <input asp-for="PostId" class="form-control" value="@ViewBag.Post.ID" />
-            <span asp-validation-for="PostId" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Comment" class="btn btn-default" />
-        </div>
-    </form>
+<div class="container">
+    @Html.Raw(ViewBag.post.Content)
 </div>
 
-<div>
+<div class="container">
+    <div class="card">
+        <h5 class="card-header">Leave a Comment:</h5>
+        <div class="card-body">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group" hidden>
+                    <label asp-for="AuthorId" class="control-label"></label>
+                    <input asp-for="AuthorId" class="form-control" value="@ViewBag.Username" />
+                    <span asp-validation-for="AuthorId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Content" class="control-label"></label>
+                    <textarea asp-for="Content" class="form-control"></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+                <div class="form-group" hidden>
+                    <label asp-for="PostId" class="control-label"></label>
+                    <input asp-for="PostId" class="form-control" value="@ViewBag.Post.ID" />
+                    <span asp-validation-for="PostId" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary" value="Comment">Submit</button>
+            </form>
+        </div>
+    </div>
+
     @if (ViewBag.Comments.Count > 0)
     {
         @foreach (Comment item in ViewBag.Comments)
         {
-            <div>
-                <h4>
-                    @Html.DisplayFor(modelItem => item.AuthorId)
-                </h4>
-                <span> @Html.DisplayFor(modelItem => item.EditedDate) </span> |
-                <span> @Html.DisplayFor(modelItem => item.PublishedDate) </span> |
-                <span> @Html.DisplayFor(modelItem => item.PostId) </span>
+            <div class="media">
+                <img class="d-flex mr-3 rounded-circle" style="float:left;" src="http://placehold.it/50x50" alt="">
+                <div class="media-body">
+                    <h5 class="mt-0">
+                        <strong>
+                            @Html.DisplayFor(modelItem => item.AuthorId)
+                        </strong>
+                        <span>
+                            on @Html.DisplayFor(modelItem => item.PublishedDate)
+                        </span>
+                    </h5>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </div>
             </div>
-            <p>
-                @Html.DisplayFor(modelItem => item.Content)
-            </p>
         }
     }
     else
@@ -77,6 +75,11 @@
         </p>
     }
 </div>
+
+<br />
+<br />
+<br />
+<br />
 
 <div>
     <a asp-action="Index">Back to List</a>

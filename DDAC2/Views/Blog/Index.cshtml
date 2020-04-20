@@ -1,52 +1,28 @@
 ﻿@page
 @model IEnumerable<DDAC2.Models.Post>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Blog";
 }
 <h2>@ViewBag.Title</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PublishedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EditedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tag)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (Post item in ViewBag.Posts)
-        {
-            <tr>
-                <td>
-                    <a asp-action="Detail" asp-route-id="@item.ID">
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </a>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PublishedDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EditedDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tag)
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row mb-2">
+    @foreach (Post item in ViewBag.Posts)
+    {
+        <a class="text-dark" asp-action="Detail" asp-route-id="@item.ID">
+            <div class="col-md-6">
+                <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                    <div class="card-body d-flex flex-column align-items-start">
+                        <h3 class="mb-0">
+                            <strong>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </strong>
+                        </h3>
+                        <div class="mb-1 text-muted">@Html.DisplayFor(modelItem => item.PublishedDate)</div>
+                        <p class="card-text mb-auto">@Html.DisplayFor(modelItem => item.Content)</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+    }
+
+</div>

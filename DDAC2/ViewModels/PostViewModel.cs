@@ -12,8 +12,6 @@ namespace DDAC2.ViewModels
         public string Title { get; set; }
         public IFormFile CoverPhoto { get; set; }
         public string Content { get; set; }
-        public DateTime PublishedDate { get; set; }
-        public DateTime EditedDate { get; set; }
         public string Tag { get; set; }
     }
 }

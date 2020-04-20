@@ -14,7 +14,6 @@ namespace DDAC2.Models
         public int PostId { get; set; }
 
         [Required]
-        [StringLength(20, MinimumLength = 3)]
         public string AuthorId { get; set; }
 
         [Required]
@@ -24,6 +23,7 @@ namespace DDAC2.Models
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime PublishedDate { get; set; }
+
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime EditedDate { get; set; }
